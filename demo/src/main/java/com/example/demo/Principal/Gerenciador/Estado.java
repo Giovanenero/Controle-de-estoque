@@ -7,7 +7,6 @@ import com.example.demo.Principal.Ente;
 
 public abstract class Estado extends Ente {
     //atributos
-    private String nome;
     protected Font font;
     protected Rectangle bounds;
     protected static GerenciadorMongoDB gerenciadorMongoDB = null;
@@ -15,7 +14,6 @@ public abstract class Estado extends Ente {
     //métodos
     protected Estado(int id, String nome){
         super(id, nome);
-        this.nome = nome;
         gerenciadorMongoDB = GerenciadorMongoDB.getGerenciadorMongoDB();
         gerenciadorGrafico = GerenciadorGrafico.getGerenciadorGrafico();
         font = new Font("Arial", Font.ITALIC, 15);
@@ -25,8 +23,4 @@ public abstract class Estado extends Ente {
     public abstract void renderizarComponentes();
     public abstract void removerComponentes();
     public abstract void criarComponentes();
-
-    public String getNome(){
-        return nome;
-    }
 }

@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -16,15 +15,10 @@ import javax.swing.JOptionPane;
 
 import com.example.demo.Principal.Componentes.CaixaTexto;
 import com.example.demo.Principal.Entidade.Produto;
-import com.example.demo.Principal.Gerenciador.Estado;
 import com.example.demo.Principal.Gerenciador.GerenciadorEstado;
 
-public class MenuSaida extends Estado implements ActionListener {
+public class MenuSaida extends Menu {
     //atributos
-    private JLabel titulo;
-    private JButton botaoConfirmar;
-    private JButton botaoCancelar;
-    private JButton botaoPesquisar;
     private Vector<CaixaTexto> caixasTexto;
     private List<Produto> listProdutos;
     private Produto produto;
@@ -39,11 +33,12 @@ public class MenuSaida extends Estado implements ActionListener {
     @Override
     public void renderizarComponentes() {
         gerenciadorGrafico.add(titulo);
-        gerenciadorGrafico.add(botaoConfirmar);
-        gerenciadorGrafico.add(botaoCancelar);
+        for(int i = 0; i < vectorBotaos.size(); i++){
+            JButton botao = vectorBotaos.get(i);
+            gerenciadorGrafico.add(botao);
+        }
         gerenciadorGrafico.add(caixasTexto.get(0).getCaixa());
         gerenciadorGrafico.add(caixasTexto.get(0).getLabel());
-        gerenciadorGrafico.add(botaoPesquisar);
         listProdutos = gerenciadorMongoDB.getProdutos();
         gerenciadorGrafico.atualizarJanela();
     }
@@ -51,14 +46,15 @@ public class MenuSaida extends Estado implements ActionListener {
     @Override
     public void removerComponentes() {
         gerenciadorGrafico.remove(titulo);
-        gerenciadorGrafico.remove(botaoConfirmar);
-        gerenciadorGrafico.remove(botaoCancelar);
+        for(int i = 0; i < vectorBotaos.size(); i++){
+            JButton botao = vectorBotaos.get(i);
+            gerenciadorGrafico.remove(botao);
+        }
         for(int i =0; i < caixasTexto.size(); i++){
             CaixaTexto caixaTexto = caixasTexto.get(i);
             gerenciadorGrafico.remove(caixaTexto.getCaixa());
             gerenciadorGrafico.remove(caixaTexto.getLabel());
         }
-        gerenciadorGrafico.remove(botaoPesquisar);
     }
 
     @Override
@@ -93,7 +89,7 @@ public class MenuSaida extends Estado implements ActionListener {
         int widthPesquisa = caixaCod.getCaixa().getBounds().width;
         int heighPesquisa = caixaCod.getCaixa().getBounds().height;
         iconPesquisa.setImage(iconPesquisa.getImage().getScaledInstance(heighPesquisa - 1, heighPesquisa - 2, 1));
-        botaoPesquisar = new JButton(iconPesquisa);
+        JButton botaoPesquisar = new JButton(iconPesquisa);
         botaoPesquisar.setBounds(
             widthPesquisa + caixaCod.getCaixa().getBounds().x,
             caixaCod.getCaixa().getBounds().y,
@@ -103,7 +99,7 @@ public class MenuSaida extends Estado implements ActionListener {
         botaoPesquisar.setBorderPainted(false);
         botaoPesquisar.addActionListener(this);
 
-        botaoConfirmar = new JButton("Confirmar");
+        JButton botaoConfirmar = new JButton("Confirmar");
         botaoConfirmar.setBounds(
             bounds.width / 2 - 200 - 20,
             bounds.height - 150,
@@ -112,7 +108,7 @@ public class MenuSaida extends Estado implements ActionListener {
         );
         botaoConfirmar.addActionListener(this);
 
-        botaoCancelar = new JButton("Cancelar");
+        JButton botaoCancelar = new JButton("Cancelar");
         botaoCancelar.setBounds(
             botaoConfirmar.getBounds().x + botaoConfirmar.getBounds().width + 40,
             bounds.height - 150,
@@ -138,6 +134,10 @@ public class MenuSaida extends Estado implements ActionListener {
         CaixaTexto caixaQtd = new CaixaTexto("", caixa, label);
         caixasTexto.add(caixaQtd);
 
+        vectorBotaos.add(botaoPesquisar);
+        vectorBotaos.add(botaoConfirmar);
+        vectorBotaos.add(botaoCancelar);
+
         titulo.setForeground(Color.LIGHT_GRAY);
 
     }
@@ -152,6 +152,8 @@ public class MenuSaida extends Estado implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent event) {
+        JButton botaoConfirmar = vectorBotaos.get(1);
+        JButton botaoCancelar = vectorBotaos.get(2);
         if(event.getSource() == botaoConfirmar){
             String textoQtd = caixasTexto.get(1).getCaixa().getText().trim();
             if(textoQtd.equals("")){

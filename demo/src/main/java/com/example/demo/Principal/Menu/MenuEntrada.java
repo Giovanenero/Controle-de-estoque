@@ -4,11 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
-//import java.awt.Rectangle;
 import java.util.Date;
-//import java.util.Vector;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -18,17 +15,12 @@ import javax.swing.JTextField;
 
 import com.example.demo.Principal.Componentes.CaixaTexto;
 import com.example.demo.Principal.Entidade.Produto;
-//import com.example.demo.Principal.Componentes.CaixaTexto;
-import com.example.demo.Principal.Gerenciador.Estado;
 import com.example.demo.Principal.Gerenciador.GerenciadorEstado;
 
-public class MenuEntrada extends Estado implements ActionListener {
+public class MenuEntrada extends Menu {
     
     //atributos
-    private JButton botaoConfirmar;
-    private JButton botaoCancelar;
     private Vector<CaixaTexto> caixasTexto;
-    private JLabel titulo;
     private Date data;
 
     //métodos
@@ -139,7 +131,7 @@ public class MenuEntrada extends Estado implements ActionListener {
         CaixaTexto caixaPreco = new CaixaTexto("Preço por unidade:", caixa, label);
         caixasTexto.add(caixaPreco);
 
-        botaoConfirmar = new JButton("Confirmar");
+        JButton botaoConfirmar = new JButton("Confirmar");
         botaoConfirmar.setBounds(
             bounds.width / 2 - 200 - 20,
             bounds.height - 150,
@@ -148,7 +140,7 @@ public class MenuEntrada extends Estado implements ActionListener {
         );
         botaoConfirmar.addActionListener(this);
 
-        botaoCancelar = new JButton("Cancelar");
+        JButton botaoCancelar = new JButton("Cancelar");
         botaoCancelar.setBounds(
             botaoConfirmar.getBounds().x + botaoConfirmar.getBounds().width + 40,
             bounds.height - 150,
@@ -158,6 +150,8 @@ public class MenuEntrada extends Estado implements ActionListener {
         botaoCancelar.addActionListener(this);
 
         titulo.setForeground(Color.LIGHT_GRAY);
+        vectorBotaos.add(botaoConfirmar);
+        vectorBotaos.add(botaoCancelar);
     }
 
     @Override
@@ -167,8 +161,10 @@ public class MenuEntrada extends Estado implements ActionListener {
             gerenciadorGrafico.add(aux.getCaixa());
             gerenciadorGrafico.add(aux.getLabel());
         }
-        gerenciadorGrafico.add(botaoConfirmar);
-        gerenciadorGrafico.add(botaoCancelar);
+        for(int i = 0; i < vectorBotaos.size(); i++){
+            JButton botao = vectorBotaos.get(i);
+            gerenciadorGrafico.add(botao);
+        }
         gerenciadorGrafico.add(titulo);
         gerenciadorGrafico.atualizarJanela();
     }
@@ -181,13 +177,16 @@ public class MenuEntrada extends Estado implements ActionListener {
             gerenciadorGrafico.remove(aux.getCaixa());
             gerenciadorGrafico.remove(aux.getLabel());
         }
-        gerenciadorGrafico.remove(botaoConfirmar);
-        gerenciadorGrafico.remove(botaoCancelar);
+        for(int i = 0; i < vectorBotaos.size(); i++){
+            JButton botao = vectorBotaos.get(i);
+            gerenciadorGrafico.remove(botao);
+        }
         gerenciadorGrafico.remove(titulo);
     }
 
     @Override
     public void actionPerformed(ActionEvent event) {
+        JButton botaoConfirmar = vectorBotaos.get(0);
         if(event.getSource() == botaoConfirmar){
             boolean tudoCerto = true;
             int i = 0;

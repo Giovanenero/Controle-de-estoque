@@ -2,7 +2,6 @@ package com.example.demo.Principal.Menu;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -14,16 +13,11 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import com.example.demo.Principal.Entidade.Produto;
-import com.example.demo.Principal.Gerenciador.Estado;
 import com.example.demo.Principal.Gerenciador.GerenciadorEstado;
 
-public class MenuHome extends Estado implements ActionListener {
+public class MenuHome extends Menu {
     //atributos
     private JTextField caixaPesquisa;
-    private JButton botaoPesquisa;
-    private JButton botaoEntrada;
-    private JButton botaoSaida;
-    private JButton botaoVoltar;
     private JScrollPane scrollPane;
     private List<Produto> produtos;
     private DefaultTableModel modeloTabela;
@@ -38,22 +32,22 @@ public class MenuHome extends Estado implements ActionListener {
     @Override
     public void renderizarComponentes() {
         atualizarLista();
+        for(int i = 0; i < vectorBotaos.size(); i++){
+            JButton botao = vectorBotaos.get(i);
+            gerenciadorGrafico.add(botao);
+        }
         gerenciadorGrafico.add(caixaPesquisa);
-        gerenciadorGrafico.add(botaoPesquisa);
-        gerenciadorGrafico.add(botaoEntrada);
-        gerenciadorGrafico.add(botaoSaida);
-        gerenciadorGrafico.add(botaoVoltar);
         gerenciadorGrafico.add(scrollPane);
         gerenciadorGrafico.atualizarJanela();
     }
 
     @Override
     public void removerComponentes() {
+        for(int i = 0; i < vectorBotaos.size(); i++){
+            JButton botao = vectorBotaos.get(i);
+            gerenciadorGrafico.remove(botao);
+        }
         gerenciadorGrafico.remove(caixaPesquisa);
-        gerenciadorGrafico.remove(botaoPesquisa);
-        gerenciadorGrafico.remove(botaoEntrada);
-        gerenciadorGrafico.remove(botaoSaida);
-        gerenciadorGrafico.remove(botaoVoltar);
         gerenciadorGrafico.remove(scrollPane);
     }
 
@@ -96,7 +90,7 @@ public class MenuHome extends Estado implements ActionListener {
         int widthPesquisa = caixaPesquisa.getBounds().width;
         int heighPesquisa = caixaPesquisa.getBounds().height;
         iconPesquisa.setImage(iconPesquisa.getImage().getScaledInstance(heighPesquisa - 1, heighPesquisa - 2, 1));
-        botaoPesquisa = new JButton(iconPesquisa);
+        JButton botaoPesquisa = new JButton(iconPesquisa);
         botaoPesquisa.setBounds(
             widthPesquisa + caixaPesquisa.getBounds().x,
             caixaPesquisa.getBounds().y,
@@ -109,7 +103,7 @@ public class MenuHome extends Estado implements ActionListener {
         heighPesquisa = heighPesquisa + 20;
 
         //ImageIcon iconEntrada;
-        botaoEntrada = new JButton("Entrada");
+        JButton botaoEntrada = new JButton("Entrada");
         botaoEntrada.setBounds(
             bounds.width / 2 - 50,
             heighPesquisa,
@@ -118,7 +112,7 @@ public class MenuHome extends Estado implements ActionListener {
         );
         botaoEntrada.addActionListener(this);
 
-        botaoSaida = new JButton("Saida");
+        JButton botaoSaida = new JButton("Saida");
         botaoSaida.setBounds(
             botaoEntrada.getBounds().x + botaoEntrada.getBounds().width + 25,
             heighPesquisa,
@@ -127,7 +121,7 @@ public class MenuHome extends Estado implements ActionListener {
         );
         botaoSaida.addActionListener(this);
 
-        botaoVoltar = new JButton("Sair");
+        JButton botaoVoltar = new JButton("Sair");
         botaoVoltar.setBounds(
             botaoSaida.getBounds().x + botaoSaida.getBounds().width + 25,
             heighPesquisa,
@@ -152,12 +146,19 @@ public class MenuHome extends Estado implements ActionListener {
         caixaPesquisa.setBackground(Color.LIGHT_GRAY);
         caixaPesquisa.setForeground(Color.WHITE);
         caixaPesquisa.setCaretColor(Color.WHITE);
+
+        vectorBotaos.add(botaoPesquisa);
+        vectorBotaos.add(botaoEntrada);
+        vectorBotaos.add(botaoSaida);
+        vectorBotaos.add(botaoVoltar);
     }
 
     @Override
     public void actionPerformed(ActionEvent event) {
         Boolean entrou = true;
-
+        JButton botaoPesquisa = vectorBotaos.get(0);
+        JButton botaoEntrada = vectorBotaos.get(1);
+        JButton botaoVoltar = vectorBotaos.get(3);
         if(event.getSource() == botaoPesquisa){
             System.out.println("Pesquisa\n");
         } else if(event.getSource() == botaoVoltar){

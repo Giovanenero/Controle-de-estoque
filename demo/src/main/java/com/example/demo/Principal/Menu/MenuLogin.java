@@ -3,7 +3,6 @@ package com.example.demo.Principal.Menu;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -11,13 +10,11 @@ import javax.swing.JOptionPane;
 
 import com.example.demo.Principal.Componentes.CaixaTexto;
 import com.example.demo.Principal.Entidade.Usuario;
-import com.example.demo.Principal.Gerenciador.Estado;
 import com.example.demo.Principal.Gerenciador.GerenciadorEstado;
 import com.example.demo.Principal.Gerenciador.GerenciadorGrafico;
 
-public class MenuLogin extends Estado implements ActionListener {
-    private JButton botaoEntrar;
-    private JButton botaoCadastrar;
+public class MenuLogin extends Menu {
+    //atributos
     private Vector<CaixaTexto> caixasTexto;
 
     //métodos
@@ -77,11 +74,7 @@ public class MenuLogin extends Estado implements ActionListener {
         caixasTexto.add(senhaCaixa);
 
         //Criando botão entrar;
-        botaoEntrar = new JButton("Entrar");
-        if(botaoEntrar == null){
-            System.out.println("Não foi possivel criar um botao");
-            System.exit(0);
-        }
+        JButton botaoEntrar = new JButton("Entrar");
         botaoEntrar.setBounds(
             bounds.width / 2 - (width / 2),
             bounds.height / 2 - (height / 2) + erroBotao,
@@ -91,9 +84,10 @@ public class MenuLogin extends Estado implements ActionListener {
         botaoEntrar.setFont(font);
         botaoEntrar.setBackground(Color.LIGHT_GRAY);
         botaoEntrar.addActionListener(this);
+        vectorBotaos.add(botaoEntrar);
 
         //Criando botão cadastrar
-        botaoCadastrar = new JButton("Cadastrar");
+        JButton botaoCadastrar = new JButton("Cadastrar");
         botaoCadastrar.setBounds(
             bounds.width / 2 + 10,
             bounds.height / 2 - (height / 2) + erroBotao,
@@ -103,6 +97,7 @@ public class MenuLogin extends Estado implements ActionListener {
         botaoCadastrar.setBackground(Color.LIGHT_GRAY);
         botaoCadastrar.setFont(font);
         botaoCadastrar.addActionListener(this);
+        vectorBotaos.add(botaoCadastrar);
     }
     @Override
     public void renderizarComponentes(){
@@ -111,8 +106,10 @@ public class MenuLogin extends Estado implements ActionListener {
             gerenciadorGrafico.add(caixaTexto.getCaixa());
             gerenciadorGrafico.add(caixaTexto.getLabel());
         }
-        gerenciadorGrafico.add(botaoEntrar);
-        gerenciadorGrafico.add(botaoCadastrar);
+        for(int i = 0; i < vectorBotaos.size(); i++){
+            JButton botao = vectorBotaos.get(i);
+            gerenciadorGrafico.add(botao);
+        }
         gerenciadorGrafico.atualizarJanela();
     }
     @Override
@@ -122,8 +119,10 @@ public class MenuLogin extends Estado implements ActionListener {
             gerenciadorGrafico.remove(caixaTexto.getLabel());
             gerenciadorGrafico.remove(caixaTexto.getCaixa());
         }
-        gerenciadorGrafico.remove(botaoEntrar);
-        gerenciadorGrafico.remove(botaoCadastrar);
+        for(int i = 0; i < vectorBotaos.size(); i++){
+            JButton botao = vectorBotaos.get(i);
+            gerenciadorGrafico.remove(botao);
+        }
     }
     public static void alterarEstado(String nome){
         GerenciadorEstado.getGerenciadorEstado().alterarEstado(nome);
@@ -135,7 +134,8 @@ public class MenuLogin extends Estado implements ActionListener {
         String login = caixaLogin.trim();
         String senha = caixaSenha.trim();
         if(!login.equals("") && !senha.equals("")){
-            Usuario usuario = gerenciadorMongoDB.usuarioExiste(login, senha); 
+            Usuario usuario = gerenciadorMongoDB.usuarioExiste(login, senha);
+            JButton botaoEntrar = vectorBotaos.get(0);
             if(event.getSource() == botaoEntrar){
                 if(usuario != null){
                     GerenciadorEstado gerenciador = GerenciadorEstado.getGerenciadorEstado();
