@@ -23,7 +23,7 @@ public class CaixaTexto {
         caixa.setBounds(boundsCaixa);
         caixa.setBackground(Color.GRAY);
         caixa.setCaretColor(Color.white);
-        caixa.setForeground(Color.WHITE);
+        caixa.setForeground(Color.BLACK);
         label.setForeground(Color.WHITE);
     }
 
