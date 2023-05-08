@@ -21,6 +21,7 @@ public class MenuHome extends Menu {
     private JScrollPane scrollPane;
     private List<Produto> produtos;
     private DefaultTableModel modeloTabela;
+    private JButton botaoMonitoramento;
 
 
     //métodos
@@ -32,12 +33,15 @@ public class MenuHome extends Menu {
     @Override
     public void renderizarComponentes() {
         atualizarLista();
-        for(int i = 0; i < vectorBotaos.size(); i++){
+        for(int i = 0; i < vectorBotaos.size() - 1; i++){
             JButton botao = vectorBotaos.get(i);
             gerenciadorGrafico.add(botao);
         }
         gerenciadorGrafico.add(caixaPesquisa);
         gerenciadorGrafico.add(scrollPane);
+        if(gerenciadorUsuario.ehAdministrador()){
+            gerenciadorGrafico.add(botaoMonitoramento);
+        }
         gerenciadorGrafico.atualizarJanela();
     }
 
@@ -49,6 +53,7 @@ public class MenuHome extends Menu {
         }
         gerenciadorGrafico.remove(caixaPesquisa);
         gerenciadorGrafico.remove(scrollPane);
+        gerenciadorGrafico.remove(botaoMonitoramento);
     }
 
     public void atualizarLista(){
@@ -80,11 +85,14 @@ public class MenuHome extends Menu {
         caixaPesquisa = new JTextField();
         caixaPesquisa.setBounds(
             25,
-            25 + 25,
-            bounds.width / 3,
+            58,
+            200,
             25
         );
         caixaPesquisa.setFont(font);
+
+        int heightBotao = 50;
+        int widthBotao = 150;
 
         ImageIcon iconPesquisa = new ImageIcon(getClass().getResource("./../../assets/lupa.jpg"));
         int widthPesquisa = caixaPesquisa.getBounds().width;
@@ -107,8 +115,8 @@ public class MenuHome extends Menu {
         botaoEntrada.setBounds(
             bounds.width / 2 - 50,
             heighPesquisa,
-            150,
-            50
+            widthBotao,
+            heightBotao
         );
         botaoEntrada.addActionListener(this);
 
@@ -116,8 +124,8 @@ public class MenuHome extends Menu {
         botaoSaida.setBounds(
             botaoEntrada.getBounds().x + botaoEntrada.getBounds().width + 25,
             heighPesquisa,
-            150,
-            50
+            widthBotao,
+            heightBotao
         );
         botaoSaida.addActionListener(this);
 
@@ -125,8 +133,8 @@ public class MenuHome extends Menu {
         botaoVoltar.setBounds(
             botaoSaida.getBounds().x + botaoSaida.getBounds().width + 25,
             heighPesquisa,
-            150,
-            50
+            widthBotao,
+            heightBotao
         );
         botaoVoltar.addActionListener(this);
 
@@ -139,10 +147,15 @@ public class MenuHome extends Menu {
         modeloTabela.addColumn("ÚLTIMA MODIFICAÇÃO");
         modeloTabela.addColumn("TOTAL");
 
-        botaoEntrada.setBackground(Color.LIGHT_GRAY);
-        botaoSaida.setBackground(Color.LIGHT_GRAY);
-        botaoVoltar.setBackground(Color.LIGHT_GRAY);
-        botaoPesquisa.setBackground(Color.GRAY);
+        botaoMonitoramento = new JButton("Monitoramento");
+        botaoMonitoramento.setBounds(
+            bounds.width / 2 - 225,
+            heighPesquisa,
+            widthBotao,
+            heightBotao
+        );
+        botaoMonitoramento.addActionListener(this);
+
         caixaPesquisa.setBackground(Color.LIGHT_GRAY);
         caixaPesquisa.setForeground(Color.WHITE);
         caixaPesquisa.setCaretColor(Color.WHITE);
@@ -151,6 +164,12 @@ public class MenuHome extends Menu {
         vectorBotaos.add(botaoEntrada);
         vectorBotaos.add(botaoSaida);
         vectorBotaos.add(botaoVoltar);
+        vectorBotaos.add(botaoMonitoramento);
+
+        for(int i = 0; i < vectorBotaos.size(); i++){
+            JButton botao = vectorBotaos.get(i);
+            botao.setBackground(Color.LIGHT_GRAY);
+        }
     }
 
     @Override
@@ -164,7 +183,6 @@ public class MenuHome extends Menu {
         } else if(event.getSource() == botaoVoltar){
             System.out.println("Voltar");
             entrou = GerenciadorEstado.getGerenciadorEstado().alterarEstado("menuLogin");
-            GerenciadorEstado.getGerenciadorEstado().setAdministrador(false);
         } else {
             entrou = !entrou;
             if(event.getSource() == botaoEntrada){

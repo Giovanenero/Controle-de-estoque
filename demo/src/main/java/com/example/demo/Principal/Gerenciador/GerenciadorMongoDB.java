@@ -6,13 +6,17 @@ import com.mongodb.client.MongoCursor;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import com.example.demo.Principal.Entidade.Produto;
 import com.example.demo.Principal.Entidade.Usuario;
+import com.example.demo.Principal.Estruturas.Modificacao;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
@@ -22,6 +26,7 @@ public class GerenciadorMongoDB {
     private MongoDatabase database = null;
     private MongoCollection<org.bson.Document> collectionProduto = null;
     private MongoCollection<org.bson.Document> collectionUsuario = null;
+    private MongoCollection<org.bson.Document> collectionMonitoramento = null;
     private MongoCursor<Document> cursor; 
     private static GerenciadorMongoDB mongoDB = null; 
     private List<Produto> produtos = null;
@@ -33,6 +38,7 @@ public class GerenciadorMongoDB {
         database = mongoClient.getDatabase("Projeto");
         collectionProduto = database.getCollection("Produtos");
         collectionUsuario = database.getCollection("Usuarios");
+        collectionMonitoramento = database.getCollection("Monitoramento");
         produtos = new ArrayList<>();
         usuarios = new ArrayList<>();
         recuperarUsuarios();
@@ -156,5 +162,38 @@ public class GerenciadorMongoDB {
 
     public List<Produto> getProdutos(){
         return produtos;
+    }
+
+    public void addMonitoramento(Produto produto, Usuario usuario){
+        Date data = new Date();
+        SimpleDateFormat formatacao = new SimpleDateFormat("dd/MM/yyyy");
+        Document document = new Document();
+        document.put("nomeProduto", produto.getNome());
+        document.put("idProduto", produto.getId());
+        document.put("SaldoProduto", produto.getQtd());
+        document.put("nomeUsuario", usuario.getNome());
+        document.put("idUsuario", usuario.getId());
+        document.put("dataModificacao", formatacao.format(data));
+        collectionMonitoramento.insertOne(document);
+    }
+
+    public List<Modificacao> recuperarModificacoes(){
+        cursor = collectionMonitoramento.find().iterator();
+        List<Modificacao> listModificacaos = new ArrayList<>();
+        try {
+            while(cursor.hasNext()){
+                Document document = cursor.next();
+                String nomeProduto = document.get("nomeProduto").toString();
+                String nomeUsuario = document.get("nomeUsuario").toString();
+                int idProduto = Integer.parseInt(document.get("idProduto").toString());
+                int idUsuario = Integer.parseInt(document.get("idUsuario").toString());
+                String data = document.get("dataModificacao").toString();
+                Modificacao modificacao = new Modificacao(nomeProduto, nomeUsuario, idProduto, idUsuario, data);
+                listModificacaos.add(modificacao);
+            }
+        } finally {
+            cursor.close();
+        }
+        return listModificacaos;
     }
 }

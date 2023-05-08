@@ -11,11 +11,13 @@ public abstract class Estado extends Ente {
     protected Rectangle bounds;
     protected static GerenciadorMongoDB gerenciadorMongoDB = null;
     protected static GerenciadorGrafico gerenciadorGrafico = null;
+    protected static GerenciadorUsuario gerenciadorUsuario = null;
     //métodos
     protected Estado(int id, String nome){
         super(id, nome);
         gerenciadorMongoDB = GerenciadorMongoDB.getGerenciadorMongoDB();
         gerenciadorGrafico = GerenciadorGrafico.getGerenciadorGrafico();
+        gerenciadorUsuario = GerenciadorUsuario.getGerenciadorUsuario();
         font = new Font("Arial", Font.ITALIC, 15);
         bounds = gerenciadorGrafico.getBounds();
     }

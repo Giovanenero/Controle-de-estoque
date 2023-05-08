@@ -12,6 +12,7 @@ import com.example.demo.Principal.Componentes.CaixaTexto;
 import com.example.demo.Principal.Entidade.Usuario;
 import com.example.demo.Principal.Gerenciador.GerenciadorEstado;
 import com.example.demo.Principal.Gerenciador.GerenciadorGrafico;
+import com.example.demo.Principal.Gerenciador.GerenciadorUsuario;
 
 public class MenuLogin extends Menu {
     //atributos
@@ -139,7 +140,7 @@ public class MenuLogin extends Menu {
             if(event.getSource() == botaoEntrar){
                 if(usuario != null){
                     GerenciadorEstado gerenciador = GerenciadorEstado.getGerenciadorEstado();
-                    gerenciador.setAdministrador(usuario.getAdministrador());
+                    gerenciadorUsuario.setUsuario(usuario);
                     Boolean entrou = gerenciador.alterarEstado("menuHome");
                     caixasTexto.get(0).getCaixa().setText("");
                     caixasTexto.get(1).getCaixa().setText("");

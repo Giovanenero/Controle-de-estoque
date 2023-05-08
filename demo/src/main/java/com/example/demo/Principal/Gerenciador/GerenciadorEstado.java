@@ -9,14 +9,14 @@ import com.example.demo.Principal.Menu.MenuSaida;
 public class GerenciadorEstado {
     //atributos
     private static GerenciadorEstado gerenciadorEstado = null;
+    private static GerenciadorUsuario gerenciadorUsuario = null;
     private Vector<Estado> estados = null;
     private int posEstadoAtual;
-    private boolean administrador;
 
     //métodos
     private GerenciadorEstado() {
         //Criar todos os estados
-        administrador = false;
+        gerenciadorUsuario = GerenciadorUsuario.getGerenciadorUsuario();
         criarEstados();
     }
 
@@ -25,10 +25,6 @@ public class GerenciadorEstado {
             gerenciadorEstado = new GerenciadorEstado();
         }
         return gerenciadorEstado;
-    }
-
-    public void setAdministrador(boolean administrador){
-        this.administrador = administrador;
     }
 
     public void criarEstados(){
@@ -55,6 +51,7 @@ public class GerenciadorEstado {
     }
 
     public Boolean alterarEstado(String nome){
+        Boolean administrador = gerenciadorUsuario.ehAdministrador();
         if(nome == "menuHome" || nome == "menuLogin" || administrador){
             int i = 0;
             boolean naoEcontrou = true;

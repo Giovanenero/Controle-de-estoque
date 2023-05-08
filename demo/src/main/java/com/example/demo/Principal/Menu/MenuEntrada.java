@@ -33,7 +33,6 @@ public class MenuEntrada extends Menu {
         centralizarTexto();
         titulo.setFont(new Font("Arial", Font.BOLD, 100));
         data = new Date();
-
         criarComponentes();
     }
 
@@ -211,6 +210,7 @@ public class MenuEntrada extends Menu {
                 String data = formatacao.format(this.data);
                 Produto produto = new Produto(codigo, nome, qtd, lote, preco, data);
                 gerenciadorMongoDB.addProduto(produto);
+                gerenciadorUsuario.monidificouProduto(produto);
                 Boolean entrou = GerenciadorEstado.getGerenciadorEstado().alterarEstado("menuHome");
                 if(!entrou){
                     System.out.println("Não foi possível acessar o menu home");
