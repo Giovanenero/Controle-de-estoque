@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import com.example.demo.Principal.Componentes.CaixaTexto;
 import com.example.demo.Principal.Entidade.Produto;
@@ -28,7 +29,8 @@ public class MenuEntrada extends Menu {
         super(3, "menuEntrada");
         caixasTexto = new Vector<>();
         titulo = new JLabel("Entrada");
-        titulo.setBounds(bounds.width / 2 - 200, 50, 400, 80);
+        titulo.setBounds(bounds.width / 2 - 250, 50, 500, 100);
+        centralizarTexto();
         titulo.setFont(new Font("Arial", Font.BOLD, 100));
         data = new Date();
 

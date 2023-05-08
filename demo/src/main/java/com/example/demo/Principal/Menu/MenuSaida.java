@@ -60,7 +60,8 @@ public class MenuSaida extends Menu {
     @Override
     public void criarComponentes() {
         titulo = new JLabel("Saida");
-        titulo.setBounds(bounds.width / 2 - 135, 50, 270, 80);
+        titulo.setBounds(bounds.width / 2 - 250, 50, 500, 80);
+        centralizarTexto();
         titulo.setFont(new Font("Arial", Font.BOLD, 100));
 
         int paddingY = 200;

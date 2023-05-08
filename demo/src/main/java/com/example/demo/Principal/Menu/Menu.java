@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 import com.example.demo.Principal.Gerenciador.Estado;
 
@@ -23,5 +24,9 @@ public abstract class Menu extends Estado implements ActionListener{
     public abstract void removerComponentes();
     public abstract void criarComponentes();
     public abstract void actionPerformed(ActionEvent event);
+    protected void centralizarTexto() {
+        titulo.setHorizontalAlignment(SwingConstants.CENTER);
+        titulo.setVerticalAlignment(SwingConstants.CENTER);
+    }
     
 }
