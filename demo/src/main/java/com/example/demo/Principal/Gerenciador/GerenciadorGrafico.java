@@ -40,6 +40,7 @@ public class GerenciadorGrafico {
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         janela.setLocationRelativeTo(null);
         janela.setVisible(true);
+        janela.setLayout(null);
     }
     public void add(JTextField caixaTexto){
         janela.add(caixaTexto);
