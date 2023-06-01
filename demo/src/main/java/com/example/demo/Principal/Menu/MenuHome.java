@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.example.demo.Principal.Entidade.Produto;
 import com.example.demo.Principal.Gerenciador.GerenciadorEstado;
+import com.example.demo.Principal.Gerenciador.GerenciadorMongoDB;
 
 public class MenuHome extends Menu {
     //atributos
@@ -23,10 +24,9 @@ public class MenuHome extends Menu {
     private DefaultTableModel modeloTabela;
     private JButton botaoMonitoramento;
 
-
     //métodos
     public MenuHome() {
-        super(2, "menuHome");
+        super(Long.parseLong("2"), "menuHome");
         criarComponentes();
     }
 
@@ -56,8 +56,11 @@ public class MenuHome extends Menu {
         gerenciadorGrafico.remove(botaoMonitoramento);
     }
 
+    /**
+     * 
+     */
     public void atualizarLista(){
-        produtos = gerenciadorMongoDB.getProdutos();
+        produtos = new GerenciadorMongoDB().getListProdutos();
         //modeloTabela = (DefaultTableModel)modeloTabela.getModel();
         modeloTabela.setNumRows(0);
         for(int i = 0; i < produtos.size(); i++){
@@ -76,6 +79,7 @@ public class MenuHome extends Menu {
         JTable tabela = new JTable(modeloTabela);
         tabela.setBounds(25, 200, 400, 200);
         tabela.setEnabled(false);
+
         scrollPane = new JScrollPane(tabela);
         scrollPane.setBounds(20, 150, 940, 400);
     }
@@ -178,19 +182,21 @@ public class MenuHome extends Menu {
         JButton botaoPesquisa = vectorBotaos.get(0);
         JButton botaoEntrada = vectorBotaos.get(1);
         JButton botaoVoltar = vectorBotaos.get(3);
+        JButton botaoMonitoramento = vectorBotaos.get(4);
+        String nomeEstado = "";
+        entrou = !entrou;
+
         if(event.getSource() == botaoPesquisa){
             System.out.println("Pesquisa\n");
+            entrou = true;
         } else if(event.getSource() == botaoVoltar){
-            System.out.println("Voltar");
-            entrou = GerenciadorEstado.getGerenciadorEstado().alterarEstado("menuLogin");
+            nomeEstado = "menuLogin";
+        } else if(event.getSource() == botaoMonitoramento){
+            nomeEstado = "menuMonitoramento";
         } else {
-            entrou = !entrou;
-            if(event.getSource() == botaoEntrada){
-                entrou = GerenciadorEstado.getGerenciadorEstado().alterarEstado("menuEntrada");
-            } else {
-                entrou = GerenciadorEstado.getGerenciadorEstado().alterarEstado("menuSaida");
-            }
+            nomeEstado = event.getSource() == botaoEntrada ? "menuEntrada" : "menuSaida";
         }
+        entrou = GerenciadorEstado.getGerenciadorEstado().alterarEstado(nomeEstado);
         if(!entrou){
             JOptionPane.showMessageDialog(null, "Função habilitada apenas para os Administradores.");
         }

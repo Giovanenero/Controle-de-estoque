@@ -1,16 +1,17 @@
 package com.example.demo.Principal.Gerenciador;
 
-import com.example.demo.Principal.Entidade.Produto;
+//import com.example.demo.Principal.Entidade.Produto;
 import com.example.demo.Principal.Entidade.Usuario;
 
 public class GerenciadorUsuario {
-    private static GerenciadorUsuario gerenciadorUsuario = null;
-    private static GerenciadorMongoDB gerenciadorMongoDB = null;
+    private static GerenciadorUsuario gerenciadorUsuario;
+    //private static GerenciadorMongoDB gerenciadorMongoDB;
     private static Usuario usuario;
 
     private GerenciadorUsuario(){
+        gerenciadorUsuario = null;
+        //gerenciadorMongoDB = null;
         usuario = null;
-        gerenciadorMongoDB = GerenciadorMongoDB.getGerenciadorMongoDB();
     }
 
     public static GerenciadorUsuario getGerenciadorUsuario(){
@@ -23,30 +24,25 @@ public class GerenciadorUsuario {
     public void verificaUsuario(){
         if(usuario == null){
             System.out.println("Usuário eh nulo!");
-            System.exit(0);
+            System.exit(1);
         }
     }
 
     public void setUsuario(Usuario usuario){
         if(usuario == null){
             System.out.println("Usuário eh nulo!");
-            System.exit(0);
+            System.exit(1);
         }
         GerenciadorUsuario.usuario = usuario;
+    }
+
+    public Usuario getUsuario(){
+        verificaUsuario();
+        return usuario;
     }
 
     public Boolean ehAdministrador(){
         verificaUsuario();
         return usuario.getAdministrador();
     }
-
-    public void monidificouProduto(Produto produto){
-        verificaUsuario();
-        if(produto == null){
-            System.out.println("Produto eh nulo!");
-            System.exit(0);
-        }
-        gerenciadorMongoDB.addMonitoramento(produto, usuario);
-    }
-
 }

@@ -8,7 +8,7 @@ public class Usuario extends Ente {
     private String senha;
     
     //métodos
-    public Usuario(int id, String nome, String senha, boolean ehAdministrador){
+    public Usuario(Long id, String nome, String senha, boolean ehAdministrador){
         super(id, nome);
         this.ehAdministrador = ehAdministrador;
         this.senha = senha;

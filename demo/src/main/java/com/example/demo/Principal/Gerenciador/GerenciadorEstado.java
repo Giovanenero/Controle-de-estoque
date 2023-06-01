@@ -4,6 +4,7 @@ import java.util.Vector;
 import com.example.demo.Principal.Menu.MenuEntrada;
 import com.example.demo.Principal.Menu.MenuHome;
 import com.example.demo.Principal.Menu.MenuLogin;
+import com.example.demo.Principal.Menu.MenuMonitoramento;
 import com.example.demo.Principal.Menu.MenuSaida;
 
 public class GerenciadorEstado {
@@ -33,12 +34,16 @@ public class GerenciadorEstado {
         MenuHome menuHome = new MenuHome();
         MenuEntrada menuEntrada = new MenuEntrada();
         MenuSaida menuSaida = new MenuSaida();
-        menuLogin.renderizarComponentes();
-        //menuHome.renderizarComponentes();
+        MenuMonitoramento menuMonitoramento = new MenuMonitoramento();
+
         estados.add(menuLogin);
         estados.add(menuHome);
         estados.add(menuEntrada);
         estados.add(menuSaida);
+        estados.add(menuMonitoramento);
+
+        menuLogin.renderizarComponentes();
+        
         int i = 0;
         boolean naoEncontrou = true;
         while(i < estados.size() && naoEncontrou){
