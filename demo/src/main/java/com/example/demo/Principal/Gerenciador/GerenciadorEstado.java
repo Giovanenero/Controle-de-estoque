@@ -18,7 +18,6 @@ public class GerenciadorEstado {
     private GerenciadorEstado() {
         //Criar todos os estados
         gerenciadorUsuario = GerenciadorUsuario.getGerenciadorUsuario();
-        criarEstados();
     }
 
     public static GerenciadorEstado getGerenciadorEstado(){

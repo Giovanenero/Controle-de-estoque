@@ -1,38 +1,27 @@
 package com.example.demo.Principal.Estruturas;
 
 public final class Modificacao {
-    public String nomeProduto;
     public Long idProduto;
-    public String nomeUsuario;
     public Long idUsuario;
     public String data;
     public String tipo;
-    public int saldoProduto;
+    public int saldoAnterior;
+    public int novoSaldo;
 
     public Modificacao(
-        String nomeProduto, 
-        String nomeUsuario, 
         Long idProduto, 
         Long idUsuario, 
-        String data,
-        int saldoProduto, 
-        String tipo
+        int saldoAnterior,
+        int novoSaldo,
+        String tipo,
+        String data
     ){
-        this.nomeProduto = nomeProduto;
-        this.nomeUsuario = nomeUsuario;
         this.idProduto = idProduto;
         this.idUsuario = idUsuario;
         this.data = data;
         this.tipo = tipo;
-        this.saldoProduto = saldoProduto;
-    }
-
-    public String getNomeProduto(){
-        return nomeProduto;
-    }
-
-    public String nomeUsuario(){
-        return nomeUsuario;
+        this.saldoAnterior = saldoAnterior;
+        this.novoSaldo = novoSaldo;
     }
 
     public Long getIdProduto(){
@@ -51,8 +40,12 @@ public final class Modificacao {
         return tipo;
     }
 
-    public int getSaldoProduto(){
-        return saldoProduto;
+    public int getSaldoAnterior(){
+        return saldoAnterior;
+    }
+
+    public int getNovoSaldo(){
+        return novoSaldo;
     }
     
 }

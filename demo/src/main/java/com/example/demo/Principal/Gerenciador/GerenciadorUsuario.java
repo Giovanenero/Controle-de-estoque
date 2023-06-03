@@ -5,12 +5,10 @@ import com.example.demo.Principal.Entidade.Usuario;
 
 public class GerenciadorUsuario {
     private static GerenciadorUsuario gerenciadorUsuario;
-    //private static GerenciadorMongoDB gerenciadorMongoDB;
     private static Usuario usuario;
 
     private GerenciadorUsuario(){
         gerenciadorUsuario = null;
-        //gerenciadorMongoDB = null;
         usuario = null;
     }
 

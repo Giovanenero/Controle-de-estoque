@@ -85,14 +85,13 @@ public class GerenciadorMongoDB {
         try {
             while(cursor.hasNext()){
                 Document document = cursor.next();
-                String nomeProduto = document.get("nomeProduto") != null ? document.get("nomeProduto").toString() : "";
                 Long idProduto = document.get("idProduto") != null ? Long.parseLong(document.get("idProduto").toString()) : null;
-                int saldoProduto = document.get("SaldoProduto") != null ? Integer.parseInt(document.get("SaldoProduto").toString()) : 0;
-                String nomeUsuario = document.get("nomeUsuario").toString();
+                int saldoAnterior = document.get("saldoAnterior") != null ? Integer.parseInt(document.get("saldoAnterior").toString()) : 0;
+                int novoSaldo = document.get("novoSaldo") != null ? Integer.parseInt(document.get("novoSaldo").toString()) : 0;
                 Long idUsuario = Long.parseLong(document.get("idUsuario").toString());
                 String dataModificacao = document.get("dataModificacao").toString();
                 String tipoModificacao = document.get("tipoModificacao").toString();
-                Modificacao modificacao = new Modificacao(nomeProduto, nomeUsuario, idProduto, idUsuario, dataModificacao, saldoProduto, tipoModificacao);
+                Modificacao modificacao = new Modificacao(idProduto, idUsuario, saldoAnterior, novoSaldo, tipoModificacao, data);
                 modificacoes.add(modificacao);
             }
         } finally {
@@ -201,16 +200,13 @@ public class GerenciadorMongoDB {
         Date data = new Date();
         SimpleDateFormat formatacao = new SimpleDateFormat("dd/MM/yyyy");
         Document document = new Document();
-        document.put("nomeProduto", null);
         document.put("idProduto", null);
         document.put("SaldoProduto", null);
 
         if(produto != null){
-            document.put("nomeProduto", produto.getNome());
             document.put("idProduto", produto.getId());
             document.put("SaldoProduto", produto.getQtd());
         }
-        document.put("nomeUsuario", usuario.getNome());
         document.put("idUsuario", usuario.getId());
         document.put("dataModificacao", formatacao.format(data));
         document.put("tipoModificacao", nomeModificacao);

@@ -13,5 +13,7 @@ public class Principal {
     public void executar(){
         grafico = GerenciadorGrafico.getGerenciadorGrafico();
         estado = GerenciadorEstado.getGerenciadorEstado();
+        grafico.novoJanela();
+        estado.criarEstados();
     }
 }

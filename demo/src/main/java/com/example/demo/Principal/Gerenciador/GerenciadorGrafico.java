@@ -16,8 +16,7 @@ public class GerenciadorGrafico {
 
     //métodos
     private GerenciadorGrafico(){
-        novoJanela();
-        atualizarJanela();
+
     }
     public static GerenciadorGrafico getGerenciadorGrafico(){
         if(gerenciadorGrafico == null){
@@ -25,7 +24,7 @@ public class GerenciadorGrafico {
         }
         return gerenciadorGrafico;
     }
-    private void novoJanela(){
+    public void novoJanela(){
         janela = new JFrame();
         if(janela == null){
             System.out.println("ERROR: janela is null");
@@ -36,6 +35,8 @@ public class GerenciadorGrafico {
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         janela.setLocationRelativeTo(null);
         janela.setVisible(true);
+        janela.setLayout(null);
+        atualizarJanela();
     }
     public void add(JTextField caixaTexto){
         janela.add(caixaTexto);
