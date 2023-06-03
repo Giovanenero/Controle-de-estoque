@@ -151,7 +151,7 @@ public class MenuLogin extends Menu {
                 if(usuario != null){
                     GerenciadorEstado gerenciador = GerenciadorEstado.getGerenciadorEstado();
                     gerenciadorUsuario.setUsuario(usuario);
-                    gerenciadorMongoDB.addMonitoramento(null, usuario, "login");
+                    gerenciadorMongoDB.addMonitoramento(usuario, "login");
                     Boolean entrou = gerenciador.alterarEstado("menuHome");
                     caixasTexto.get(0).getCaixa().setText("");
                     caixasTexto.get(1).getCaixa().setText("");
@@ -164,8 +164,9 @@ public class MenuLogin extends Menu {
                 }
             } else {
                 if(usuario == null){
-                    gerenciadorMongoDB.registrarUsuario(login, senha);
-                    gerenciadorMongoDB.addMonitoramento(null, usuario, "criar conta");
+                    usuario = gerenciadorMongoDB.registrarUsuario(login, senha);
+                    gerenciadorMongoDB.addMonitoramento(usuario, "criar conta");
+                    usuario = null;
                     caixasTexto.get(0).getCaixa().setText("");
                     caixasTexto.get(1).getCaixa().setText("");
                 } else {

@@ -39,6 +39,28 @@ public class GerenciadorMongoDB {
         collectionMonitoramento = database.getCollection("Monitoramento");
     }
 
+    public Produto getProduto(Long id){
+        List<Produto> produtos = getListProdutos();
+        for(int i = 0; i < produtos.size(); i++){
+            Produto produto = produtos.get(i);
+            if(produto.getId() == id){
+                return produto;
+            }
+        }
+        return null;
+    }
+
+    public Usuario getUsuario(Long id){
+        List<Usuario> usuarios = getListUsuarios();
+        for(int i = 0; i < usuarios.size(); i++){
+            Usuario usuario = usuarios.get(i);
+            if(usuario.getId() == id){
+                return usuario;
+            }
+        }
+        return null;
+    }
+
     public List<Produto> getListProdutos(){
         cursor = collectionProduto.find().iterator();
         List<Produto> produtos = new ArrayList<>();
@@ -91,35 +113,13 @@ public class GerenciadorMongoDB {
                 Long idUsuario = Long.parseLong(document.get("idUsuario").toString());
                 String dataModificacao = document.get("dataModificacao").toString();
                 String tipoModificacao = document.get("tipoModificacao").toString();
-                Modificacao modificacao = new Modificacao(idProduto, idUsuario, saldoAnterior, novoSaldo, tipoModificacao, data);
+                Modificacao modificacao = new Modificacao(idProduto, idUsuario, saldoAnterior, novoSaldo, tipoModificacao, dataModificacao);
                 modificacoes.add(modificacao);
             }
         } finally {
             cursor.close();
         }
         return modificacoes;
-    }
-
-    public Produto getProduto(Long id){
-        List<Produto> produtos = getListProdutos();
-        for(int i = 0; i < produtos.size(); i++){
-            Produto produto = produtos.get(i);
-            if(produto.getId() == id){
-                return produto;
-            }
-        }
-        return null;
-    }
-
-    public Usuario getUsuario(Long id){
-        List<Usuario> usuarios = getListUsuarios();
-        for(int i = 0; i < usuarios.size(); i++){
-            Usuario usuario = usuarios.get(i);
-            if(usuario.getId() == id){
-                return usuario;
-            }
-        }
-        return null;
     }
 
     public Usuario usuarioExiste(String login, String senha){
@@ -152,7 +152,7 @@ public class GerenciadorMongoDB {
         return senhaCriptografada;
     }
 
-    public void registrarUsuario(String nome, String senha){
+    public Usuario registrarUsuario(String nome, String senha){
         Random random = new Random();
         Long id = random.nextLong(1000000, 9999999);
         boolean ehAdministrador = false;
@@ -163,6 +163,7 @@ public class GerenciadorMongoDB {
         document.put("senha", senha);
         document.put("ehAdministrador", ehAdministrador);
         collectionUsuario.insertOne(document);
+        return new Usuario(id, nome, senha, ehAdministrador);
     }
 
     public void addProduto(Produto produto){
@@ -175,7 +176,7 @@ public class GerenciadorMongoDB {
         document.put("valorTotal", produto.getValorTotal());
         document.put("dataModificacao", produto.getDataModificacao());
         collectionProduto.insertOne(document);
-        addMonitoramento(produto, GerenciadorUsuario.getGerenciadorUsuario().getUsuario(), "acidionar produto");
+        addMonitoramento(produto, GerenciadorUsuario.getGerenciadorUsuario().getUsuario(), "acidionar produto", 0);
     }
 
     //altera o produto no mongoDB
@@ -189,24 +190,33 @@ public class GerenciadorMongoDB {
             Bson updateOperation = new Document("$set", updateValue);
             collectionProduto.updateOne(found, updateOperation);
             produto.setQtd(qtd);
-            addMonitoramento(produto, GerenciadorUsuario.getGerenciadorUsuario().getUsuario(), "alterar produto");
+            addMonitoramento(produto, GerenciadorUsuario.getGerenciadorUsuario().getUsuario(), "alterar produto", qtd + subQtd);
         } catch(Exception e){
             System.out.println("Erro: não foi possível encontrar o produto");
         }
     }
 
     //arrumar
-    public void addMonitoramento(Produto produto, Usuario usuario, String nomeModificacao){
+    public void addMonitoramento(Produto produto, Usuario usuario, String nomeModificacao, int saldoAnterior){
+        Date data = new Date();
+        SimpleDateFormat formatacao = new SimpleDateFormat("dd/MM/yyyy");
+        Document document = new Document();
+        document.put("idProduto", produto == null ? null : produto.getId());
+        document.put("novoSaldo", produto == null ? null : produto.getQtd());
+        document.put("saldoAnterior", saldoAnterior);
+        document.put("idUsuario", usuario == null ? null : usuario.getId());
+        document.put("dataModificacao", formatacao.format(data));
+        document.put("tipoModificacao", nomeModificacao);
+        collectionMonitoramento.insertOne(document);
+    }
+
+    public void addMonitoramento(Usuario usuario, String nomeModificacao){
         Date data = new Date();
         SimpleDateFormat formatacao = new SimpleDateFormat("dd/MM/yyyy");
         Document document = new Document();
         document.put("idProduto", null);
-        document.put("SaldoProduto", null);
-
-        if(produto != null){
-            document.put("idProduto", produto.getId());
-            document.put("SaldoProduto", produto.getQtd());
-        }
+        document.put("saldoAnterior", null);
+        document.put("novoSaldo", null);
         document.put("idUsuario", usuario.getId());
         document.put("dataModificacao", formatacao.format(data));
         document.put("tipoModificacao", nomeModificacao);

@@ -99,8 +99,26 @@ public class MenuMonitoramento extends Menu {
 
             List<Modificacao> modificacoes = gerenciadorMongoDB.getListModificacaoUsuario(usuario.getId());
 
-            
+            for(int i = 0; i < modificacoes.size(); i++){
+                Modificacao modificacao = modificacoes.get(i);
+                Produto produto = gerenciadorMongoDB.getProduto(modificacao.getIdProduto());
+                Object[] linha = {
+                    produto != null ? produto.getId() : "-",
+                    produto != null ? produto.getNome() : "-",
+                    produto != null ? produto.getLote() : "-",
+                    produto != null ? produto.getValorTotal() : "-",
+                    modificacao.getTipo(),
+                    produto != null ? modificacao.getSaldoAnterior() : "-",
+                    produto != null ? modificacao.getNovoSaldo() : "-",
+                    modificacao.getData()
+                };
 
+                modeloTabela.addRow(linha);
+            }
+
+            tabela = new JTable(modeloTabela);
+            tabela.setBounds(25, 200, 400, 200);
+            tabela.setEnabled(false);
 
         } else {
             System.out.println("usuario não existe\n");
