@@ -230,7 +230,7 @@ public class GerenciadorMongoDB {
     public List<Modificacao> getListModificacaoUsuario(Long id){
         List<Modificacao> modificacoes = getListModificacao();
         List<Modificacao> modificacoesUsuario = new ArrayList<>();
-        for(int i = 0; i < modificacoes.size(); i++){
+        for(int i = 0; i < modificacoes.size() && i < 100 ; i++){
             Modificacao modificacao = modificacoes.get(i);
             if(modificacao.getIdUsuario().toString().equals(id.toString())){
                 modificacoesUsuario.add(modificacao);

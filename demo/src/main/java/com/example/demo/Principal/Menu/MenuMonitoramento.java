@@ -1,5 +1,6 @@
 package com.example.demo.Principal.Menu;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -15,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import com.example.demo.Principal.Entidade.Produto;
 import com.example.demo.Principal.Entidade.Usuario;
 import com.example.demo.Principal.Estruturas.Modificacao;
+import com.example.demo.Principal.Gerenciador.GerenciadorEstado;
 import com.example.demo.Principal.Gerenciador.GerenciadorMongoDB;
 
 public class MenuMonitoramento extends Menu {
@@ -58,6 +60,16 @@ public class MenuMonitoramento extends Menu {
         );
         botaoPesquisa.setBorderPainted(false);
         botaoPesquisa.addActionListener(this);
+
+        JButton botaoVoltar = new JButton("Voltar");
+        botaoVoltar.setBounds(
+            bounds.width / 2 + 260,
+            50,
+            200,
+            50
+        );
+        botaoVoltar.addActionListener(this);
+        botaoVoltar.setBackground(Color.LIGHT_GRAY);
         
 
         modeloTabela = new DefaultTableModel();
@@ -68,6 +80,7 @@ public class MenuMonitoramento extends Menu {
         modeloTabela.addColumn("DATA");
 
         vectorBotaos.add(botaoPesquisa);
+        vectorBotaos.add(botaoVoltar);
     }
     
     @Override
@@ -120,6 +133,15 @@ public class MenuMonitoramento extends Menu {
             tabela.setBounds(25, 200, 400, 200);
             tabela.setEnabled(false);
 
+            scrollPane = new JScrollPane(tabela);
+            scrollPane.setBounds(20, 120, 940, 400);
+
+            removerComponentes();
+
+            gerenciadorGrafico.add(vectorBotaos.get(1));
+            gerenciadorGrafico.add(scrollPane);
+            gerenciadorGrafico.atualizarJanela();
+
         } else {
             System.out.println("usuario não existe\n");
         }
@@ -129,6 +151,15 @@ public class MenuMonitoramento extends Menu {
     public void atualizarLista(){
         GerenciadorMongoDB mongoDB = new GerenciadorMongoDB();
         usuarios = mongoDB.getListUsuarios();
+
+        modeloTabela = null;
+        modeloTabela = new DefaultTableModel();
+        modeloTabela.addColumn("CÓDIGO");
+        modeloTabela.addColumn("USUÁRIO");
+        modeloTabela.addColumn("ÚLTIMO EVENTO");
+        modeloTabela.addColumn("ADMINISTRADOR");
+        modeloTabela.addColumn("DATA");
+
         modeloTabela.setNumRows(0);
         for(int i = 0; i < usuarios.size(); i++){
             Usuario usuario = usuarios.get(i);
@@ -196,6 +227,11 @@ public class MenuMonitoramento extends Menu {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-
+        if(event.getSource() == vectorBotaos.get(0)){
+            //caixa de pesquisa
+        } else {
+            GerenciadorEstado.getGerenciadorEstado().alterarEstado("menuHome");
+            removerComponentes();
+        }
     }
 }
