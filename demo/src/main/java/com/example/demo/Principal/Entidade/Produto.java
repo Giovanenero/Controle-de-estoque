@@ -14,7 +14,7 @@ public class Produto extends Ente {
     private Date data;
 
     //métodos
-    public Produto(int id, String nome, int qtd, String lote, float preco, String data){
+    public Produto(Long id, String nome, int qtd, String lote, float preco, String data){
         super(id, nome);
         this.qtd = qtd;
         this.lote = lote;

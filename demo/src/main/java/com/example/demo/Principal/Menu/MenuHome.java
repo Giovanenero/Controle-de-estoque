@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.example.demo.Principal.Entidade.Produto;
 import com.example.demo.Principal.Gerenciador.GerenciadorEstado;
+import com.example.demo.Principal.Gerenciador.GerenciadorMongoDB;
 
 public class MenuHome extends Menu {
     //atributos
@@ -21,23 +22,26 @@ public class MenuHome extends Menu {
     private JScrollPane scrollPane;
     private List<Produto> produtos;
     private DefaultTableModel modeloTabela;
-
+    private JButton botaoMonitoramento;
 
     //métodos
     public MenuHome() {
-        super(2, "menuHome");
+        super(Long.parseLong("2"), "menuHome");
         criarComponentes();
     }
 
     @Override
     public void renderizarComponentes() {
         atualizarLista();
-        for(int i = 0; i < vectorBotaos.size(); i++){
+        for(int i = 0; i < vectorBotaos.size() - 1; i++){
             JButton botao = vectorBotaos.get(i);
             gerenciadorGrafico.add(botao);
         }
         gerenciadorGrafico.add(caixaPesquisa);
         gerenciadorGrafico.add(scrollPane);
+        if(gerenciadorUsuario.ehAdministrador()){
+            gerenciadorGrafico.add(botaoMonitoramento);
+        }
         gerenciadorGrafico.atualizarJanela();
     }
 
@@ -49,10 +53,14 @@ public class MenuHome extends Menu {
         }
         gerenciadorGrafico.remove(caixaPesquisa);
         gerenciadorGrafico.remove(scrollPane);
+        gerenciadorGrafico.remove(botaoMonitoramento);
     }
 
+    /**
+     * 
+     */
     public void atualizarLista(){
-        produtos = gerenciadorMongoDB.getProdutos();
+        produtos = new GerenciadorMongoDB().getListProdutos();
         //modeloTabela = (DefaultTableModel)modeloTabela.getModel();
         modeloTabela.setNumRows(0);
         for(int i = 0; i < produtos.size(); i++){
@@ -71,6 +79,7 @@ public class MenuHome extends Menu {
         JTable tabela = new JTable(modeloTabela);
         tabela.setBounds(25, 200, 400, 200);
         tabela.setEnabled(false);
+
         scrollPane = new JScrollPane(tabela);
         scrollPane.setBounds(20, 150, 940, 400);
     }
@@ -80,11 +89,14 @@ public class MenuHome extends Menu {
         caixaPesquisa = new JTextField();
         caixaPesquisa.setBounds(
             25,
-            25 + 25,
-            bounds.width / 3,
+            58,
+            200,
             25
         );
         caixaPesquisa.setFont(font);
+
+        int heightBotao = 50;
+        int widthBotao = 150;
 
         ImageIcon iconPesquisa = new ImageIcon(getClass().getResource("./../../assets/lupa.jpg"));
         int widthPesquisa = caixaPesquisa.getBounds().width;
@@ -107,8 +119,8 @@ public class MenuHome extends Menu {
         botaoEntrada.setBounds(
             bounds.width / 2 - 50,
             heighPesquisa,
-            150,
-            50
+            widthBotao,
+            heightBotao
         );
         botaoEntrada.addActionListener(this);
 
@@ -116,8 +128,8 @@ public class MenuHome extends Menu {
         botaoSaida.setBounds(
             botaoEntrada.getBounds().x + botaoEntrada.getBounds().width + 25,
             heighPesquisa,
-            150,
-            50
+            widthBotao,
+            heightBotao
         );
         botaoSaida.addActionListener(this);
 
@@ -125,8 +137,8 @@ public class MenuHome extends Menu {
         botaoVoltar.setBounds(
             botaoSaida.getBounds().x + botaoSaida.getBounds().width + 25,
             heighPesquisa,
-            150,
-            50
+            widthBotao,
+            heightBotao
         );
         botaoVoltar.addActionListener(this);
 
@@ -139,10 +151,15 @@ public class MenuHome extends Menu {
         modeloTabela.addColumn("ÚLTIMA MODIFICAÇÃO");
         modeloTabela.addColumn("TOTAL");
 
-        botaoEntrada.setBackground(Color.LIGHT_GRAY);
-        botaoSaida.setBackground(Color.LIGHT_GRAY);
-        botaoVoltar.setBackground(Color.LIGHT_GRAY);
-        botaoPesquisa.setBackground(Color.GRAY);
+        botaoMonitoramento = new JButton("Monitoramento");
+        botaoMonitoramento.setBounds(
+            bounds.width / 2 - 225,
+            heighPesquisa,
+            widthBotao,
+            heightBotao
+        );
+        botaoMonitoramento.addActionListener(this);
+
         caixaPesquisa.setBackground(Color.LIGHT_GRAY);
         caixaPesquisa.setForeground(Color.WHITE);
         caixaPesquisa.setCaretColor(Color.WHITE);
@@ -151,6 +168,12 @@ public class MenuHome extends Menu {
         vectorBotaos.add(botaoEntrada);
         vectorBotaos.add(botaoSaida);
         vectorBotaos.add(botaoVoltar);
+        vectorBotaos.add(botaoMonitoramento);
+
+        for(int i = 0; i < vectorBotaos.size(); i++){
+            JButton botao = vectorBotaos.get(i);
+            botao.setBackground(Color.LIGHT_GRAY);
+        }
     }
 
     @Override
@@ -159,21 +182,23 @@ public class MenuHome extends Menu {
         JButton botaoPesquisa = vectorBotaos.get(0);
         JButton botaoEntrada = vectorBotaos.get(1);
         JButton botaoVoltar = vectorBotaos.get(3);
+        JButton botaoMonitoramento = vectorBotaos.get(4);
+        String nomeEstado = "";
+        entrou = !entrou;
+
         if(event.getSource() == botaoPesquisa){
             System.out.println("Pesquisa\n");
+            entrou = true;
         } else if(event.getSource() == botaoVoltar){
-            System.out.println("Voltar");
-            entrou = GerenciadorEstado.getGerenciadorEstado().alterarEstado("menuLogin");
-            GerenciadorEstado.getGerenciadorEstado().setAdministrador(false);
+            nomeEstado = "menuLogin";
+        } else if(event.getSource() == botaoMonitoramento){
+            nomeEstado = "menuMonitoramento";
         } else {
-            entrou = !entrou;
-            if(event.getSource() == botaoEntrada){
-                entrou = GerenciadorEstado.getGerenciadorEstado().alterarEstado("menuEntrada");
-            } else {
-                entrou = GerenciadorEstado.getGerenciadorEstado().alterarEstado("menuSaida");
-            }
+            nomeEstado = event.getSource() == botaoEntrada ? "menuEntrada" : "menuSaida";
         }
-        if(!entrou){
+        if(nomeEstado != ""){
+            entrou = GerenciadorEstado.getGerenciadorEstado().alterarEstado(nomeEstado);
+        } else if(!entrou){
             JOptionPane.showMessageDialog(null, "Função habilitada apenas para os Administradores.");
         }
     }

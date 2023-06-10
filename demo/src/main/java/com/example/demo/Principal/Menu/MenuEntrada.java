@@ -12,7 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 import com.example.demo.Principal.Componentes.CaixaTexto;
 import com.example.demo.Principal.Entidade.Produto;
@@ -26,14 +25,13 @@ public class MenuEntrada extends Menu {
 
     //métodos
     public MenuEntrada(){
-        super(3, "menuEntrada");
+        super(Long.parseLong("3") , "menuEntrada");
         caixasTexto = new Vector<>();
         titulo = new JLabel("Entrada");
         titulo.setBounds(bounds.width / 2 - 250, 50, 500, 100);
         centralizarTexto();
         titulo.setFont(new Font("Arial", Font.BOLD, 100));
         data = new Date();
-
         criarComponentes();
     }
 
@@ -202,11 +200,11 @@ public class MenuEntrada extends Menu {
             if(!tudoCerto){
                 JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos primeiro!");
             } else {
-                String nome = caixasTexto.get(0).getCaixa().getText();
-                int codigo = Integer.parseInt(caixasTexto.get(1).getCaixa().getText());
-                String lote = caixasTexto.get(2).getCaixa().getText();
-                int qtd = Integer.parseInt(caixasTexto.get(3).getCaixa().getText());
-                float preco = Float.parseFloat(caixasTexto.get(4).getCaixa().getText());
+                String nome = caixasTexto.get(0).getCaixa().getText().trim();
+                Long codigo = Long.parseLong(caixasTexto.get(1).getCaixa().getText().trim());
+                String lote = caixasTexto.get(2).getCaixa().getText().trim();
+                int qtd = Integer.parseInt(caixasTexto.get(3).getCaixa().getText().trim());
+                float preco = Float.parseFloat(caixasTexto.get(4).getCaixa().getText().trim());
                 SimpleDateFormat formatacao = new SimpleDateFormat("dd/MM/yyyy");
                 String data = formatacao.format(this.data);
                 Produto produto = new Produto(codigo, nome, qtd, lote, preco, data);
@@ -214,7 +212,7 @@ public class MenuEntrada extends Menu {
                 Boolean entrou = GerenciadorEstado.getGerenciadorEstado().alterarEstado("menuHome");
                 if(!entrou){
                     System.out.println("Não foi possível acessar o menu home");
-                    System.exit(0);
+                    System.exit(1);
                 }
             }
         } else {

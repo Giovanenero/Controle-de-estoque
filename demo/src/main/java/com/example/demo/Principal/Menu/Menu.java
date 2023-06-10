@@ -15,7 +15,7 @@ public abstract class Menu extends Estado implements ActionListener{
     protected JLabel titulo;
     protected Vector<JButton> vectorBotaos;
 
-    public Menu(int id, String nome){
+    public Menu(Long id, String nome){
         super(id, nome);
         vectorBotaos = new Vector<>();
     }

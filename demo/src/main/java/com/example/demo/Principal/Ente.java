@@ -2,15 +2,15 @@ package com.example.demo.Principal;
 
 public class Ente {
     //atributos
-    protected int id;
+    protected Long id;
     protected String nome;
 
     //métodos
-    public Ente(int id, String nome){
+    public Ente(Long id, String nome){
         this.id = id;
         this.nome = nome;
     }
-    public int getId(){
+    public Long getId(){
         return id;
     }
     public String getNome(){

@@ -9,19 +9,14 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import com.example.demo.Principal.Coordenada;
-
 public class GerenciadorGrafico {
     //atributos
     private static JFrame janela;
-    private Coordenada coord;
     private static GerenciadorGrafico gerenciadorGrafico = null;
 
     //métodos
     private GerenciadorGrafico(){
-        coord = new Coordenada(1000,600);
-        novoJanela();
-        atualizarJanela();
+
     }
     public static GerenciadorGrafico getGerenciadorGrafico(){
         if(gerenciadorGrafico == null){
@@ -29,13 +24,13 @@ public class GerenciadorGrafico {
         }
         return gerenciadorGrafico;
     }
-    private void novoJanela(){
+    public void novoJanela(){
         janela = new JFrame();
         if(janela == null){
             System.out.println("ERROR: janela is null");
             System.exit(0);
         }
-        janela.setBounds(0, 0, coord.x, coord.y);
+        janela.setBounds(0, 0, 1000, 600);
         janela.getContentPane().setBackground(Color.BLACK);
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         janela.setLocationRelativeTo(null);

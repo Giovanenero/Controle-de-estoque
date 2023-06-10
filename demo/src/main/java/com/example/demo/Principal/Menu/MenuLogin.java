@@ -1,11 +1,13 @@
 package com.example.demo.Principal.Menu;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import com.example.demo.Principal.Componentes.CaixaTexto;
@@ -19,29 +21,31 @@ public class MenuLogin extends Menu {
 
     //métodos
     public MenuLogin(){
-        super(1, "menuLogin");
+        super(Long.parseLong("1"), "menuLogin");
         gerenciadorGrafico = GerenciadorGrafico.getGerenciadorGrafico();
         if(gerenciadorGrafico == null){
             System.out.println("Gerenciador Gráfico eh null");
-            System.exit(0);
+            System.exit(1);
         }
+        titulo = new JLabel("Login");
+        titulo.setBounds(bounds.width / 2 - 250, 75, 500, 125);
+        centralizarTexto();
+        titulo.setFont(new Font("Arial", Font.BOLD, 100));
         caixasTexto = new Vector<>();
         criarComponentes();
     }
+
     @Override
     public void criarComponentes(){
         int width = 300;
         int height = 25;
-        int erroCaixa = 60;
-        int erroLabel = 25;
-        int erroBotao = 50;
 
         Rectangle caixa = new Rectangle();
         Rectangle label = new Rectangle();
 
         label.setBounds(
             bounds.width / 2 - (width / 2),
-            bounds.height / 2 - (height / 2) - erroCaixa - erroLabel,
+            bounds.height / 2 - 50,
             width,
             height
         );
@@ -77,7 +81,7 @@ public class MenuLogin extends Menu {
         JButton botaoEntrar = new JButton("Entrar");
         botaoEntrar.setBounds(
             bounds.width / 2 - (width / 2),
-            bounds.height / 2 - (height / 2) + erroBotao,
+            label.getBounds().y + caixa.getBounds().height * 3,
             width / 2 - 10,
             height
         );
@@ -90,15 +94,17 @@ public class MenuLogin extends Menu {
         JButton botaoCadastrar = new JButton("Cadastrar");
         botaoCadastrar.setBounds(
             bounds.width / 2 + 10,
-            bounds.height / 2 - (height / 2) + erroBotao,
+            label.getBounds().y + caixa.getBounds().height * 3,
             width / 2 - 10,
             height
         );
         botaoCadastrar.setBackground(Color.LIGHT_GRAY);
+        titulo.setForeground(Color.LIGHT_GRAY);
         botaoCadastrar.setFont(font);
         botaoCadastrar.addActionListener(this);
         vectorBotaos.add(botaoCadastrar);
     }
+    
     @Override
     public void renderizarComponentes(){
         for(int i = 0; i < caixasTexto.size(); i++){
@@ -110,8 +116,10 @@ public class MenuLogin extends Menu {
             JButton botao = vectorBotaos.get(i);
             gerenciadorGrafico.add(botao);
         }
+        gerenciadorGrafico.add(titulo);
         gerenciadorGrafico.atualizarJanela();
     }
+
     @Override
     public void removerComponentes(){
         for(int i = 0; i < caixasTexto.size(); i++){
@@ -123,10 +131,13 @@ public class MenuLogin extends Menu {
             JButton botao = vectorBotaos.get(i);
             gerenciadorGrafico.remove(botao);
         }
+        gerenciadorGrafico.remove(titulo);
     }
+
     public static void alterarEstado(String nome){
         GerenciadorEstado.getGerenciadorEstado().alterarEstado(nome);
     }
+    
     @Override
     public void actionPerformed(ActionEvent event) {
         String caixaLogin = caixasTexto.get(0).getCaixa().getText();
@@ -139,7 +150,8 @@ public class MenuLogin extends Menu {
             if(event.getSource() == botaoEntrar){
                 if(usuario != null){
                     GerenciadorEstado gerenciador = GerenciadorEstado.getGerenciadorEstado();
-                    gerenciador.setAdministrador(usuario.getAdministrador());
+                    gerenciadorUsuario.setUsuario(usuario);
+                    gerenciadorMongoDB.addMonitoramento(usuario, "login");
                     Boolean entrou = gerenciador.alterarEstado("menuHome");
                     caixasTexto.get(0).getCaixa().setText("");
                     caixasTexto.get(1).getCaixa().setText("");
@@ -152,7 +164,9 @@ public class MenuLogin extends Menu {
                 }
             } else {
                 if(usuario == null){
-                    gerenciadorMongoDB.registrarUsuario(login, senha);
+                    usuario = gerenciadorMongoDB.registrarUsuario(login, senha);
+                    gerenciadorMongoDB.addMonitoramento(usuario, "criar conta");
+                    usuario = null;
                     caixasTexto.get(0).getCaixa().setText("");
                     caixasTexto.get(1).getCaixa().setText("");
                 } else {

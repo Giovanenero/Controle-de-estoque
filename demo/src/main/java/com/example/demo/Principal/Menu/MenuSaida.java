@@ -24,7 +24,7 @@ public class MenuSaida extends Menu {
     private Produto produto;
 
     public MenuSaida() {
-        super(4, "menuSaida");
+        super(Long.parseLong("4"), "menuSaida");
         caixasTexto = new Vector<>();
         listProdutos = new ArrayList<>();
         criarComponentes();
@@ -39,7 +39,7 @@ public class MenuSaida extends Menu {
         }
         gerenciadorGrafico.add(caixasTexto.get(0).getCaixa());
         gerenciadorGrafico.add(caixasTexto.get(0).getLabel());
-        listProdutos = gerenciadorMongoDB.getProdutos();
+        listProdutos = gerenciadorMongoDB.getListProdutos();
         gerenciadorGrafico.atualizarJanela();
     }
 
