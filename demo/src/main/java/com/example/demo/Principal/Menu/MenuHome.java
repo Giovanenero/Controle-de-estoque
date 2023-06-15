@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 import com.example.demo.Principal.Entidade.Produto;
 import com.example.demo.Principal.Gerenciador.GerenciadorEstado;
 import com.example.demo.Principal.Gerenciador.GerenciadorMongoDB;
+import com.example.demo.Principal.Gerenciador.GerenciadorUsuario;
 
 public class MenuHome extends Menu {
     //atributos
@@ -194,7 +195,9 @@ public class MenuHome extends Menu {
         } else if(event.getSource() == botaoMonitoramento){
             nomeEstado = "menuMonitoramento";
         } else {
-            nomeEstado = event.getSource() == botaoEntrada ? "menuEntrada" : "menuSaida";
+            if(GerenciadorUsuario.getGerenciadorUsuario().getUsuario().getAdministrador()){
+                nomeEstado = event.getSource() == botaoEntrada ? "menuEntrada" : "menuSaida";
+            }
         }
         if(nomeEstado != ""){
             entrou = GerenciadorEstado.getGerenciadorEstado().alterarEstado(nomeEstado);

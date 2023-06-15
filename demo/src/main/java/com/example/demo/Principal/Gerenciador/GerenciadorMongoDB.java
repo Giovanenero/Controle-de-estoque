@@ -43,7 +43,7 @@ public class GerenciadorMongoDB {
         List<Produto> produtos = getListProdutos();
         for(int i = 0; i < produtos.size(); i++){
             Produto produto = produtos.get(i);
-            if(produto.getId() == id){
+            if(produto.getId().equals(id)){
                 return produto;
             }
         }
@@ -176,7 +176,7 @@ public class GerenciadorMongoDB {
         document.put("valorTotal", produto.getValorTotal());
         document.put("dataModificacao", produto.getDataModificacao());
         collectionProduto.insertOne(document);
-        addMonitoramento(produto, GerenciadorUsuario.getGerenciadorUsuario().getUsuario(), "acidionar produto", 0);
+        addMonitoramento(produto, GerenciadorUsuario.getGerenciadorUsuario().getUsuario(), "adicionar produto", 0);
     }
 
     //altera o produto no mongoDB
